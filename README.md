@@ -10,11 +10,6 @@ Create Instagram messenger bot api and service that will respond to questions. M
 ## Technology
 We plan to implement this in NodeJS. Later on (in second version) we plan to also implement desktop app in VueJS (Or ReactJS). Also we plan to implement docker files.
 
-## User support
-Apart from the github issues, we will implement anonymous issue reporting on webpage and support trought Facebook page.
-
-## Organization, other
-We will help tracking work with trello and trought chat (Messenger ot Trello)
 
 ## Investigation / issues
 So far, there is no similar project that would read or write messages based on preconfigured settings. 
