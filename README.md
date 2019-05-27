@@ -14,9 +14,32 @@ match([regex1,regex2,regex3]).do(function1, function2);
 ...
 ```
 
-We plan to implement this in NodeJS. Later on (in second version) we plan to also implement desktop app in VueJS (Or ReactJS). Also we plan to implement docker files.
+Basic business info could be stored in JSON files:
+
+```
+{
+  "name": "John Doe's bakery",
+  "address": "790 Bushwick Ave Brooklyn, NY 11221, USA",
+  "contact_name": "John Doe",
+  "contact_phone": "123-456-789"
+  "opening_hours_from": "08.00",
+  "opening_hours_to": "16.00",
+  "parking_place": "no",
+  "delivery_available": "yes"
+  ...
+}
+```
+
+This data can then be used in methods and can be easily edited by anyone.
+
+We plan to implement this in NodeJS or PHP. Later on (in second version) we plan to also implement desktop app in VueJS (Or ReactJS). Also we plan to implement docker files for easier development.
 
 
-# Option 2: We create connection between FB messenger and IG messenger
+# Alternative 2: We create connection between FB messenger and IG messenger
 
-The goal is to simply create connection between theese software. Here we would use official facebook messenger api and our Instagram message unofficial API for accessing IG DMs. In this case there is possibility that the page which is using our service can be converted to a high-MPS Page.
+We create connection between FB messenger and IG messenger. Here we would use unofficial facebook messenger api and our Instagram message unofficial API for accessing IG DMs. Here, the flow would go like this: on IG, the message is read. This message then gets send to FB page. The reply from page is then sent back to sender trought IG messenger. Here the question is how can we get reply from Facebook page.
+
+
+# Alternative 3: We create connector between IG messenger and thrid-party services
+
+We create service that will use webhooks to communicate with third-party services.
