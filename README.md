@@ -1,6 +1,6 @@
 # instagram-chat-bot
 
-> This is not autorespond / autosend service
+> This will not be autorespond / autosend service. Similar to Facebook chat bot services, this service will use webhooks to communicate with external services to get response based on received message.
 
 
 This is a draft for instagram chat bot service.
