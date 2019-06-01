@@ -1,4 +1,4 @@
-# instagram-messenger-bot
+# instagram-chat-bot
 This is a draft for instagram chat bot service.
 
 We would create Instagram messenger bot api and service that will respond to questions. This service will not use official api as it is not possible to collect messages data and to reply to incoming messages. Instead it will use unofficial api / library (for ex: https://github.com/LevPasha/Instagram-API-python).
@@ -6,11 +6,11 @@ We would create Instagram messenger bot api and service that will respond to que
 
 ## Webhook service
 
-We create service that will use webhooks to communicate with third-party services. In this case, serice would periodically check for new messages (every 15 min or more) and would send webhook as specified in settings. Here we can support only text-based communication between IG DM and third-party service.
+Service  will use webhooks to communicate with third-party services. In this case, serice would periodically check for new messages (every 15 min or more) and would send webhook as specified in settings. Here we can support only text-based communication between IG DM and third-party service.
 
-## Chat bot
+## Basic bot service
 
-Responding to DMs would also predefined for basic info that can be defined for Facebook page. For example:
+Basic bot service will use Facebook business basic information to respond to messages:
 
 ```
 {
@@ -26,7 +26,7 @@ Responding to DMs would also predefined for basic info that can be defined for F
 }
 ```
 
-This data is pulled from FB Pages graph api automatically and can then be used in methods for example services (to get basic info about page). This example services would be automatically linked when service starts.
+This data is pulled from FB Pages graph api automatically and can then be used in "minimal bot" service (to get basic info about page). 
 
 ```
 Customer: Where can i buy your products? / Where can i get your products?
@@ -35,3 +35,10 @@ John Doe's bakery: You can buy them here: 790 Bushwick Ave Brooklyn, NY 11221, U
 
 ```
 
+It can also be used to display "business card":
+
+```
+Customer: Can i get more details for this page?
+John Doe's bakery: John Doe's bakery is located in 790 Bushwick Ave Brooklyn, NY 11221, USA
+...
+```
