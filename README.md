@@ -35,3 +35,8 @@ John Doe's bakery: You can buy them here: 790 Bushwick Ave Brooklyn, NY 11221, U
 
 ```
 
+## Instructions
+
+1. Clone to local directory
+2. Cd into dir
+2. `php -f main.php`
