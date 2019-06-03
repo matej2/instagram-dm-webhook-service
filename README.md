@@ -8,6 +8,18 @@ This is a draft for instagram chat bot service.
 We would create Instagram messenger bot api and service that will respond to questions. This service will not use official api as it is not possible to collect messages data and to reply to incoming messages. Instead it will use unofficial api / library (for ex: https://github.com/LevPasha/Instagram-API-python).
 
 
+## Contributing
+You can submit your PRs on `beta` branch.
+
+### Instructions
+
+1. Clone to local directory
+2. Cd into dir
+3. Copy and rename `config.example.json`
+4. Write webhook data 
+2. `php -f main.php`
+
+
 ## Webhook service
 
 Service  will use webhooks to communicate with third-party services. In this case, serice would periodically check for new messages (every 15 min or more) and would send webhook as specified in settings. Here we can support only text-based communication between IG DM and third-party service.
@@ -48,10 +60,4 @@ John Doe's bakery: John Doe's bakery is located in 790 Bushwick Ave Brooklyn, NY
 ...
 ```
 
-
-## Instructions
-
-1. Clone to local directory
-2. Cd into dir
-2. `php -f main.php`
 
