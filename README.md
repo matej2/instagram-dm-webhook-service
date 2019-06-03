@@ -1,24 +1,63 @@
-# instagram-messenger-bot
+# instagram-chat-bot
 
-## Introduction
-
-When you are running your business is it important to be able to get in contact with customer when he or she is looking to buy. If you miss this opportunity, you might lose a costumer. Facebook has started implementing messenger bots, Instagram, however, still does not have this feature. The fact that you cannot check messages on web application tells that such bot will provide help in managing user relations.
+> This will not be autorespond / autosend service. Similar to Facebook chat bot services, this service will use webhooks to communicate with external services to get response based on received message.
 
 
-## Goal
-Create Instagram messenger bot api and service that will respond to questions. Mentoined service will not use official api as it is not possible to collect data on messages and to reply to incoming messages. Instead it will use unofficial api / library (for ex: https://github.com/LevPasha/Instagram-API-python).
+This is a draft for instagram chat bot service.
 
-Responding to DMs would defined by regex selectors. For example:
+We would create Instagram messenger bot api and service that will respond to questions. This service will not use official api as it is not possible to collect messages data and to reply to incoming messages. Instead it will use unofficial api / library (for ex: https://github.com/LevPasha/Instagram-API-python).
+
+
+## Contributing
+You can submit your PRs on `beta` branch.
+
+### Instructions
+
+1. Clone to local directory
+2. Cd into dir
+3. Copy and rename `config.example.json`
+4. Write webhook data 
+2. `php -f main.php`
+
+
+## Webhook service
+
+Service  will use webhooks to communicate with third-party services. In this case, serice would periodically check for new messages (every 15 min or more) and would send webhook as specified in settings. Here we can support only text-based communication between IG DM and third-party service.
+
+## Basic bot service
+
+Basic bot service will use Facebook business basic information to respond to messages:
 
 ```
-match([regex1,regex2,regex3]).do(function1, function2);
+{
+  "name": "John Doe's bakery",
+  "address": "790 Bushwick Ave Brooklyn, NY 11221, USA",
+  "webpage": "www.johndoebakery.com",
+  "category": "Local business",
+  "contact_phone": "123-456-789"
+  "opening_hours_from": "08.00",
+  "opening_hours_to": "16.00",
+  "parking_place": "no",
+  ...
+}
+```
+
+This data is pulled from FB Pages graph api automatically and can then be used in "minimal bot" service (to get basic info about page). 
+
+```
+Customer: Where can i buy your products? / Where can i get your products?
+
+John Doe's bakery: You can buy them here: 790 Bushwick Ave Brooklyn, NY 11221, USA
+
+```
+
+It can also be used to display "business card":
+
+
+```
+Customer: Can i get more details for this page?
+John Doe's bakery: John Doe's bakery is located in 790 Bushwick Ave Brooklyn, NY 11221, USA
 ...
 ```
 
-## Technology
-We plan to implement this in NodeJS. Later on (in second version) we plan to also implement desktop app in VueJS (Or ReactJS). Also we plan to implement docker files.
 
-
-# Option 2: We create connection between FB messenger and IG messenger
-
-The goal is to simply create connection between theese software. Here we would use official facebook messenger api and our Instagram message unofficial API for accessing IG DMs. In this case there is possibility that the page which is using our service can be converted to a high-MPS Page.
