@@ -1,0 +1,7 @@
+WebhookSettings:
+  - url: 
+    method: POST
+    returnStatus: 200
+    keywords: hello,hi
+    perHourLimit: 200
+    perMonthLimit: 1000

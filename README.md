@@ -5,7 +5,7 @@
 
 *This is a draft for instagram dm webhook service.*
 
-We would create Instagram messenger bot api and service that will respond to questions. This service will not use official api as it is not possible to collect messages data and to reply to incoming messages. Instead it will use unofficial api / library (for ex: https://github.com/LevPasha/Instagram-API-python).
+This service will not use official api as it is not possible to collect messages data and to reply to incoming messages. Instead it will use unofficial api / library (for ex: https://github.com/LevPasha/Instagram-API-python).
 
 
 ## Contributing
