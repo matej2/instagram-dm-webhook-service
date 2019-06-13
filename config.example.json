@@ -1,5 +1,7 @@
-{
-  "url": "",
-  "method": "POST",
-  "returnStatus": 200
-}
+[
+  {
+    "url": "",
+    "method": "POST",
+    "returnStatus": 200,
+  }
+]
