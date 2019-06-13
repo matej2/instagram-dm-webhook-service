@@ -1,7 +1,0 @@
-WebhookSettings:
-  - url: https://webhook.site/e92f00d8-7687-439e-b8c0-8475b5d28db0
-    method: POST
-    returnStatus: 200
-    keywords: hello,hi
-    perHourLimit: 200
-    perMonthLimit: 1000
