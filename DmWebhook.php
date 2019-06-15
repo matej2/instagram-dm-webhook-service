@@ -1,11 +1,12 @@
 <?php 
-class InstagramChatBot
+class DmWebook
 {
   protected $config = array();
 
   public function __construct () {
     $this->config = json_decode(file_get_contents('./config.json'));
   }
+  
   public function send($config) {
     $url = $config->url;
     $data = array('key1' => 'value1', 'key2' => 'value2');
