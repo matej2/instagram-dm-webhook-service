@@ -39,4 +39,9 @@ class DmWebook
       return false;
     }
   }
+
+  public function getAllConfig() {
+    return $this->config;
+  }
+
 }

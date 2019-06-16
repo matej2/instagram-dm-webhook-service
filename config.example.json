@@ -3,5 +3,8 @@
     "url": "",
     "method": "POST",
     "returnStatus": 200,
+    "keywords": "hello,hi",
+    "perMonthLimit": 1000,
+    "perHoutLimit": 20
   }
 ]
