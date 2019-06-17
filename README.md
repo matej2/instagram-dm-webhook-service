@@ -9,7 +9,7 @@ We would create Instagram messenger bot api and service that will respond to que
 
 
 ## Contributing
-You can submit your commits on `beta` branch. 
+You can submit your commits on `beta` branch. For larger changes (features) we suggest you make separate branch and then make PR to `beta` branch.
 
 ### Instructions
 
