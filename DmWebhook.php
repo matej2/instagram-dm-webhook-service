@@ -49,13 +49,13 @@ class DmWebook
     $log  = "[".date("j-n-Y G:i")."] ".$str."".PHP_EOL;
     
     echo $log;
-    //Save string to log, use FILE_APPEND to append.
 
     if(!file_exists("./logs")) {
       mkdir("./logs");
-      //chmod("./logs", 0750);
+      chmod("./logs", 0750);
     }
-    file_put_contents('logs/'.date("j-n-Y G:i").'.log', $log, FILE_APPEND);
+
+    file_put_contents('logs/'.date("j-n-Y").'.log', $log, FILE_APPEND);
   }
 
 }
