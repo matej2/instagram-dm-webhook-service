@@ -5,6 +5,6 @@
     "returnStatus": 200,
     "keywords": "hello,hi",
     "perMonthLimit": 1000,
-    "perHoutLimit": 20
+    "perHourLimit": 20
   }
 ]

@@ -1,16 +1,17 @@
 <?php
-require_once './DmWebhook.php';
+require_once "./DmWebhook.php";
 
 $obj = new DmWebook();
-$mockInputStr = "hello";
 
-foreach($obj->getAllCOnfig() as $config) {
+// Input mocks - to be replaced
 
-  if(isset($config->keywords) && strpos($config->keywords, $mockInputStr) >= 0) {
-    $obj->log("Key found:".$mockInputStr);
-    
-  } else {
-    $obj->log("Key not found");
-  }
+$mockInputStr = array("hello, can i know more info?");
+$mockCurrHourlyquota = 5;
+
+foreach($obj->getAllCOnfig() as $confIndex => $config) {
+
+  $obj->log("Config index: ".$confIndex);
+
+  $obj->checkKeywords($config,$mockInputStr[0]);
 
 }
