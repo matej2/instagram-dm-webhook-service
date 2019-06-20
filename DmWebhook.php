@@ -49,13 +49,48 @@ class DmWebook
     $log  = "[".date("j-n-Y G:i")."] ".$str."".PHP_EOL;
     
     echo $log;
-    //Save string to log, use FILE_APPEND to append.
 
     if(!file_exists("./logs")) {
       mkdir("./logs");
-      //chmod("./logs", 0750);
+      chmod("./logs", 0750);
     }
-    file_put_contents('logs/'.date("j-n-Y G:i").'.log', $log, FILE_APPEND);
+
+    file_put_contents('logs/'.date("j-n-Y").'.log', $log, FILE_APPEND);
   }
 
+  public function isBlacklisted($config, $input) {
+    $isBlacklisted = false;
+    foreach($input as $word) {
+      $isBlacklisted &= strpos($config->blacklist, $input);
+    }
+    return $isBlacklisted;
+  }
+
+  public function isHourlLimitExceded($config) {
+    return false;
+  }
+
+  public function checkKeywords($config, $input) {
+    $this->log("Keywords: ".$config->keywords);
+    if(!isset($config->keywords)) {
+      return false;
+    }
+    $words = explode(",", $config->keywords);
+
+    foreach($words as $word) {
+      $word = trim($word);
+      
+      if(strpos($input, $word) >= 0 && gettype(strpos($input, $word)) == "integer") {
+        $this->waitlistMessage($config,$input);
+        
+      } else {
+        $this->log("Key not found. Skipping...");
+      }
+    }
+  }
+
+  public function waitlistMessage($config,$input) {
+    $this->log(" Waitlisting message: ".$input);
+    return true;
+  }
 }
