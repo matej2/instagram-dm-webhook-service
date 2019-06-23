@@ -7,11 +7,14 @@ class DmWebook
 
   public function __construct () {
     $this->config = json_decode(file_get_contents('./config.json'));
-    $this->webhooks = $this->config->webhooks;
-    $this->user = $this->config->user;
+    $this->webhooks = $this->getAllConfig()->webhooks;
+    $this->user = $this->getAllConfig()->user;
+    $this->settings = $this->getAllConfig()->settings;
 
-    //$this->ig = new \InstagramAPI\Instagram();
-    //$this->ig->login($this->user->username, $this->user->pass);
+    if($this->settings->debug == false) {
+      $this->ig = new \InstagramAPI\Instagram();
+      $this->ig->login($this->user->username, $this->user->pass);
+    }
   }
   
   public function send($config, $message) {
@@ -51,6 +54,10 @@ class DmWebook
 
   public function getUser() {
     return $this->user;
+  }
+
+  public function getSettings() {
+    return $this->settings;
   }
 
   public function log($str) {
