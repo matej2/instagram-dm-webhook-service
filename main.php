@@ -8,10 +8,12 @@ $obj = new DmWebook();
 $mockInputStr = array("hello, can i know more info?");
 $mockCurrHourlyquota = 5;
 
-foreach($obj->getAllCOnfig() as $confIndex => $config) {
+var_dump($obj->getLastDM());
 
-  $obj->log("Config index: ".$confIndex);
+foreach($obj->getWebhooks() as $whIndex => $wh) {
 
-  $obj->checkKeywords($config,$mockInputStr[0]);
+  $obj->log("Config index: ".$whIndex);
+
+  $obj->checkKeywords($wh,$mockInputStr[0]);
 
 }

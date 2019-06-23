@@ -1,10 +1,17 @@
 <?php 
+require __DIR__.'/vendor/autoload.php';
+
 class DmWebook
 {
   protected $config = array();
 
   public function __construct () {
     $this->config = json_decode(file_get_contents('./config.json'));
+    $this->webhooks = $this->config->webhooks;
+    $this->user = $this->config->user;
+
+    $this->ig = new \InstagramAPI\Instagram();
+    $this->ig->login($this->user->username, $this->user->pass);
   }
   
   public function send($config) {
@@ -42,6 +49,14 @@ class DmWebook
 
   public function getAllConfig() {
     return $this->config;
+  }
+
+  public function getWebhooks() {
+    return $this->webhooks;
+  }
+
+  public function getUser() {
+    return $this->user;
   }
 
   public function log($str) {
@@ -92,5 +107,37 @@ class DmWebook
   public function waitlistMessage($config,$input) {
     $this->log(" Waitlisting message: ".$input);
     return true;
+  }
+
+  public function getLastDM() {
+
+    $direct = $this->ig->direct->getInbox();
+
+    /*
+    TODO: unseen message check
+
+    if(!$this->ig->direct->isUnseenCount()) {
+      return false;
+    }
+    */
+    $threads = $direct->getInbox()->getThreads();
+    $inbox = array();
+    $msg = array();
+
+    foreach($threads as $thread) {
+      $threadItems = $thread->getItems();
+      foreach($threadItems as $threadItem) {
+        if ($threadItem->getText() !== null) {
+          // TODO: add profile id
+          $msg = array(
+            "message" => $threadItem->getText(),
+            "userId" => $threadItem->getUserId(),
+            "timestamp" => $threadItem->getTimestamp()
+          );
+          array_push($inbox, $msg);
+        }
+      }
+    }
+    return $inbox;
   }
 }

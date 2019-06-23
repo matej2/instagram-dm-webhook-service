@@ -1,10 +1,18 @@
-[
-  {
-    "url": "",
-    "method": "POST",
-    "returnStatus": 200,
-    "keywords": "hello,hi",
-    "perMonthLimit": 1000,
-    "perHourLimit": 20
-  }
-]
+{
+  "user": {
+    "username": "username",
+    "pass": "pass"
+    },
+  "webhooks":
+  [
+    {
+      "url": "",
+      "method": "POST",
+      "returnStatus": 200,
+      "keywords": "hello,hi",
+      "blacklist": "offer,selected",
+      "perMonthLimit": 1000,
+      "perHourLimit": 20
+    }
+  ]
+}
