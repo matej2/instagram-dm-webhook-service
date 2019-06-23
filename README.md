@@ -42,6 +42,6 @@ Furthermore, if limit quotas have been reached, the messgae is sent to wating li
 
 To prevent replying to auto-send bots, service will use keyword checks. If word is blacklisted, service will not send webhooks but it will log event.
 
-*After send method*
+* After send method
 
 After calling webhook, service will call another method enabling you to quickly add other actions in service.

@@ -1,4 +1,7 @@
 {
+  "settings": {
+    "debug": true
+  },
   "user": {
     "username": "username",
     "pass": "pass"
