@@ -10,32 +10,26 @@ class DmWebook
     $this->webhooks = $this->config->webhooks;
     $this->user = $this->config->user;
 
-    $this->ig = new \InstagramAPI\Instagram();
-    $this->ig->login($this->user->username, $this->user->pass);
+    //$this->ig = new \InstagramAPI\Instagram();
+    //$this->ig->login($this->user->username, $this->user->pass);
   }
   
-  public function send($config) {
+  public function send($config, $message) {
     $url = $config->url;
-    $data = array('key1' => 'value1', 'key2' => 'value2');
 
-    var_dump($config);
 
     // use key 'http' even if you send the request to https://...
     $options = array(
       'http' => array(
         'header'  => "Content-type: application/json",
         'method'  => $config->method,
-        'content' => json_encode($data)
+        'content' => json_encode($message)
       )
     );
     $context  = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
-    var_dump($http_response_header);
-    if ($result === FALSE) { 
-      $result.="False";
-    }
-    //return $result.$http_response_header;
-    return true;
+
+    return $http_response_header;
   }
 
   public function getSingleConfig($index) {
@@ -85,9 +79,9 @@ class DmWebook
     return false;
   }
 
-  public function checkKeywords($config, $input) {
-    $this->log("Keywords: ".$config->keywords);
+  public function processMessage($config, $input) {
     if(!isset($config->keywords)) {
+      echo "false;";
       return false;
     }
     $words = explode(",", $config->keywords);
@@ -95,17 +89,19 @@ class DmWebook
     foreach($words as $word) {
       $word = trim($word);
       
-      if(strpos($input, $word) >= 0 && gettype(strpos($input, $word)) == "integer") {
-        $this->waitlistMessage($config,$input);
-        
+      if(isset($input["message"]) && strpos($input["message"], $word) != false) {
+        $this->log("Found match for ".$input["message"].", waitlisting...");
+        return $this->waitlistMessage($config,$input);
       } else {
-        $this->log("Key not found. Skipping...");
+        return false;
       }
     }
   }
 
-  public function waitlistMessage($config,$input) {
-    $this->log(" Waitlisting message: ".$input);
+  public function waitlistMessage($config,$message) {
+    //$this->log("Waitlisting message: ".$input["message"]);
+    $response = $this->send($config, $message);
+    if($response)
     return true;
   }
 
