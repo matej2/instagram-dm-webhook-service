@@ -1,5 +1,6 @@
 <?php 
 require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/DmWebhookMockData.php';
 
 class DmWebook
 {
@@ -32,7 +33,10 @@ class DmWebook
     $context  = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
 
-    return $http_response_header;
+    return array(
+      "http_response_header" => $http_response_header,
+      "result" => $result
+    );
   }
 
   public function getSingleConfig($index) {
@@ -88,7 +92,6 @@ class DmWebook
 
   public function processMessage($config, $input) {
     if(!isset($config->keywords)) {
-      echo "false;";
       return false;
     }
     $words = explode(",", $config->keywords);
@@ -99,8 +102,6 @@ class DmWebook
       if(isset($input["message"]) && strpos($input["message"], $word) != false) {
         $this->log("Found match for ".$input["message"].", waitlisting...");
         return $this->waitlistMessage($config,$input);
-      } else {
-        return false;
       }
     }
   }
@@ -113,7 +114,9 @@ class DmWebook
   }
 
   public function getLastDM() {
-
+    if($this->getSettings()->debug == true) {
+      return getMockMessages();
+    } else {
     $direct = $this->ig->direct->getInbox();
 
     /*
