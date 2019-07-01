@@ -18,7 +18,7 @@ class DmWebook
     }
   }
   
-  public function send($config, $message) {
+  public function send($config, $message, $callback = null) {
     $url = $config->url;
 
 
@@ -33,6 +33,9 @@ class DmWebook
     $context  = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
 
+    if($callback) {
+      $callback();
+    }
     return array(
       "http_response_header" => $http_response_header,
       "result" => $result
@@ -117,33 +120,35 @@ class DmWebook
     if($this->getSettings()->debug == true) {
       return getMockMessages();
     } else {
-    $direct = $this->ig->direct->getInbox();
-
-    /*
-    TODO: unseen message check
-
-    if(!$this->ig->direct->isUnseenCount()) {
-      return false;
-    }
-    */
-    $threads = $direct->getInbox()->getThreads();
-    $inbox = array();
-    $msg = array();
-
-    foreach($threads as $thread) {
-      $threadItems = $thread->getItems();
-      foreach($threadItems as $threadItem) {
-        if ($threadItem->getText() !== null) {
-          // TODO: add profile id
-          $msg = array(
-            "message" => $threadItem->getText(),
-            "userId" => $threadItem->getUserId(),
-            "timestamp" => $threadItem->getTimestamp()
-          );
-          array_push($inbox, $msg);
+      $direct = $this->ig->direct->getInbox();
+  
+      /*
+      TODO: unseen message check
+  
+      if(!$this->ig->direct->isUnseenCount()) {
+        return false;
+      }
+      */
+      $threads = $direct->getInbox()->getThreads();
+      $inbox = array();
+      $msg = array();
+  
+      foreach($threads as $thread) {
+        $threadItems = $thread->getItems();
+        foreach($threadItems as $threadItem) {
+          if ($threadItem->getText() !== null) {
+            // TODO: add profile id
+            $msg = array(
+              "message" => $threadItem->getText(),
+              "userId" => $threadItem->getUserId(),
+              "timestamp" => $threadItem->getTimestamp()
+            );
+            array_push($inbox, $msg);
+          }
         }
       }
+      return $inbox;
     }
-    return $inbox;
+
   }
 }
