@@ -22,26 +22,31 @@ For instagram api to work, you need to [enable php extensions](https://github.co
 4. Fill in your configuration (you can use this for testing: https://webhook.site)
 5. `php -f main.php`
 
+**Setting up cone job**
 
+There is no official limt on how message to send to users in a specific period of time. While it can be problematic to send messages as a request, it is less problematic to send responses (when you are not the first one initiating conversation). The advice is to setup crone job to run service each 15 minutes (file is located at `/var/spool/cron/crontabs/`):
 
+```
+* 0/15 * ? * * * php -f /path-to-dm-bot/main.php
+```
 
 ## How will it work
 We will configure this service to run every 15 minutes. It will check latest messages from every sender. If it will match any of the keywords it will send webhooks as configured.
 
 ## Planned features
 
-* Per month / per hour limit checks
+- [ ] Per month / per hour limit checks
 
 Before calling webhook, service will count already sent webhooks to check (if defined) hourly and monthly quota limits. 
 
-* Wait list
+- [ ] Wait list
 
 Furthermore, if limit quotas have been reached, the messgae is sent to wating list in database. Message will be send when quotas are reset.
 
-* Keyword blacklist
+- [ ] Keyword blacklist
 
 To prevent replying to auto-send bots, service will use keyword checks. If word is blacklisted, service will not send webhooks but it will log event.
 
-* After send method
+- [x] After send method
 
 After calling webhook, service will call another method enabling you to quickly add other actions in service.
