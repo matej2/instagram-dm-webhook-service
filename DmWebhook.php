@@ -1,12 +1,15 @@
 <?php 
 require __DIR__.'/vendor/autoload.php';
 require __DIR__.'/DmWebhookMockData.php';
+require __DIR__.'/Logger.php';
 
 class DmWebook
 {
   protected $config = array();
 
   public function __construct () {
+    $this->logger = new Logger();
+
     $this->config = json_decode(file_get_contents('./config.json'));
     $this->webhooks = $this->getAllConfig()->webhooks;
     $this->user = $this->getAllConfig()->user;
@@ -67,19 +70,7 @@ class DmWebook
     return $this->settings;
   }
 
-  public function log($str) {
 
-    $log  = "[".date("j-n-Y G:i")."] ".$str."".PHP_EOL;
-    
-    echo $log;
-
-    if(!file_exists("./logs")) {
-      mkdir("./logs");
-      chmod("./logs", 0750);
-    }
-
-    file_put_contents('logs/'.date("j-n-Y").'.log', $log, FILE_APPEND);
-  }
 
   public function isBlacklisted($config, $input) {
     $isBlacklisted = false;
@@ -103,7 +94,7 @@ class DmWebook
       $word = trim($word);
       
       if(isset($input["message"]) && strpos($input["message"], $word) != false) {
-        $this->log("Found match for ".$input["message"].", waitlisting...");
+        $this->logger->log("Found match for ".$input["message"].", waitlisting...");
         return $this->waitlistMessage($config,$input);
       }
     }
