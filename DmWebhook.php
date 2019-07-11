@@ -95,7 +95,12 @@ class DmWebook
       
       if(isset($input["message"]) && strpos($input["message"], $word) != false) {
         $this->logger->log("Found match for ".$input["message"].", waitlisting...");
-        return $this->waitlistMessage($config,$input);
+        //return $this->waitlistMessage($config,$input);
+        $response = $this->send($config, $input);
+
+        if($this->checkResponse($config, $response)) {
+          $this->sendReply($config, $input);
+        }
       }
     }
   }
@@ -141,5 +146,20 @@ class DmWebook
       return $inbox;
     }
 
+  }
+  public function checkResponse($config, $response) {
+    if(strpos($response["http_response_header"][0], $config->method)) {
+      $this->logger->log( "Reponse status does not match target status from config. Expected " + $config->returnStatus + " but got " + $response[0]);
+      return false;
+    }
+    return true;
+  }
+  public function sendReply($config, $input) {
+    $reply = "Hello world";
+    
+    if(!$this->settings->debug)
+      $this->ig->direct->sendText($input["userId"], $reply);
+    else
+      $this->logger->log("Reply sent");
   }
 }
