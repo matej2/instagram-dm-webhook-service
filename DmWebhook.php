@@ -162,8 +162,8 @@ class DmWebook
 
   }
   public function checkWebhookResponse($config, $response) {
-    if(strpos($response["http_response_header"][0], $config->method)) {
-      $this->logger->log( "Reponse status does not match target status from config. Expected " + $config->returnStatus + " but got " + $response[0]);
+    if(!strpos($response["http_response_header"][0],strval($config->returnStatus))) {
+      $this->logger->log( "Reponse status does not match target status from config. Expected ".$config->returnStatus." but got ".$response["http_response_header"][0]);
       return false;
     }
     if(!$response["result"]) {

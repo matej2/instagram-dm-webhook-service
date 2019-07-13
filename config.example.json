@@ -15,7 +15,8 @@
       "keywords": "hello,hi",
       "blacklist": "offer,selected",
       "perMonthLimit": 1000,
-      "perHourLimit": 20
+      "perHourLimit": 20,
+      "path": "response.text"
     }
   ]
 }
