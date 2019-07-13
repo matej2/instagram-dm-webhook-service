@@ -21,7 +21,7 @@ class DmWebook
     }
   }
   
-  public function send($config, $message, $callback = null) {
+  public function sendWebhook($config, $message, $callback = null) {
     $url = $config->url;
 
 
@@ -101,12 +101,12 @@ class DmWebook
       if(isset($input["message"]) && strpos($input["message"], $word) != false) {
         $this->logger->log("Found match for ".$input["message"].", waitlisting...");
         //return $this->waitlistMessage($config,$input);
-        $response = $this->send($config, $input);
+        $response = $this->sendWebhook($config, $input);
 
         $this->logger->log("Response from chat bot: ".$response["result"]);
 
-        if($this->checkResponse($config, $response)) {
-          $this->sendReply($config, $input);
+        if($this->checkWebhookResponse($config, $response)) {
+          $this->sendWebhookReply($config, $input);
         }
       }
     }
@@ -114,7 +114,7 @@ class DmWebook
 
   public function waitlistMessage($config,$message) {
     //$this->log("Waitlisting message: ".$input["message"]);
-    $response = $this->send($config, $message);
+    $response = $this->sendWebhook($config, $message);
     if($response)
     return true;
   }
@@ -154,18 +154,22 @@ class DmWebook
     }
 
   }
-  public function checkResponse($config, $response) {
+  public function checkWebhookResponse($config, $response) {
     if(strpos($response["http_response_header"][0], $config->method)) {
       $this->logger->log( "Reponse status does not match target status from config. Expected " + $config->returnStatus + " but got " + $response[0]);
       return false;
     }
+    if(!$response["result"]) {
+      $this->logger->log("Error: Webhook response is null. Path: ".$config->path);
+      return false;
+    }
     return true;
   }
-  public function sendReply($config, $input) {
+  public function sendWebhookReply($config, $input) {
     $reply = "Hello world";
     
     if(!$this->settings->debug)
-      $this->ig->direct->sendText($input["userId"], $reply);
+      $this->ig->direct->sendWebhookText($input["userId"], $reply);
     else
       $this->logger->log("Test: Reply sent");
   }
