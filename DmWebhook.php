@@ -123,8 +123,15 @@ class DmWebook
     if($this->getSettings()->debug == true) {
       return getMockMessages();
     } else {
-      $direct = $this->ig->direct->getInbox();
-  
+
+      $maxId = null;
+      $threads = array();
+      do {
+        $direct = $this->ig->direct->getInbox();
+        $threads = array_merge($threads, $direct->getInbox()->getThreads());
+        $maxId = $direct->getNextMaxId();
+      } while ($maxId !== null);
+
       /*
       TODO: unseen message check
   
@@ -132,7 +139,7 @@ class DmWebook
         return false;
       }
       */
-      $threads = $direct->getInbox()->getThreads();
+
       $inbox = array();
       $msg = array();
   
