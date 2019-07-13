@@ -36,12 +36,17 @@ class DmWebook
     $context  = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
 
+    $path = explode(".",$config->path);
+    $whResponse = json_decode($result, true);
+
+    $val = $this->arrayPath($whResponse, $path);
+    
     if($callback) {
       $callback();
     }
     return array(
       "http_response_header" => $http_response_header,
-      "result" => $result
+      "result" => $val
     );
   }
 
@@ -97,6 +102,8 @@ class DmWebook
         $this->logger->log("Found match for ".$input["message"].", waitlisting...");
         //return $this->waitlistMessage($config,$input);
         $response = $this->send($config, $input);
+
+        $this->logger->log("Response from chat bot: ".$response["result"]);
 
         if($this->checkResponse($config, $response)) {
           $this->sendReply($config, $input);
@@ -160,6 +167,32 @@ class DmWebook
     if(!$this->settings->debug)
       $this->ig->direct->sendText($input["userId"], $reply);
     else
-      $this->logger->log("Reply sent");
+      $this->logger->log("Test: Reply sent");
+  }
+  /**
+   * set/return a nested array value
+   *
+   * @param array $array the array to modify
+   * @param array $path  the path to the value
+   * @param mixed $value (optional) value to set
+   *
+   * @return mixed previous value
+   */
+  function arrayPath(&$array, $path = array(), &$value = null)
+  {
+      $args = func_get_args();
+      $ref = &$array;
+      foreach ($path as $key) {
+          if (!is_array($ref)) {
+              $ref = array();
+          }
+          $ref = &$ref[$key];
+      }
+      $prev = $ref;
+      if (array_key_exists(2, $args)) {
+          // value param was passed -> we're setting
+          $ref = $value;  // set the value
+      }
+      return $prev;
   }
 }
