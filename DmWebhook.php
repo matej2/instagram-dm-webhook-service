@@ -91,14 +91,20 @@ class DmWebook
 
   public function processMessage($config, $input) {
     if(!isset($config->keywords)) {
+      $this->logger->log("Keywords missing. Check config");
       return false;
     }
+
+    $this->logger->log("Reading keywords");
     $words = explode(",", $config->keywords);
 
     foreach($words as $word) {
-      $word = trim($word);
-      
-      if(isset($input["message"]) && strpos($input["message"], $word) != false) {
+      $word = trim($word);     
+
+      $this->logger->log("Checking message: ".$input["message"]." for keywords: ".$word);
+      $regex = "/(^|\W)".$word."($|\W)/i";
+
+      if(isset($input["message"]) && preg_match($regex,$input["message"]) !== false && preg_match($regex,$input["message"]) !== 0) {
         $this->logger->log("Found match for ".$input["message"].", waitlisting...");
         //return $this->waitlistMessage($config,$input);
         $response = $this->sendWebhook($config, $input);
@@ -106,7 +112,7 @@ class DmWebook
         $this->logger->log("Response from chat bot: ".$response["result"]);
 
         if($this->checkWebhookResponse($config, $response)) {
-          $this->sendWebhookReply($config, $input);
+          $this->sendWebhookReply($config, $input,$response);
         }
       }
     }
@@ -129,7 +135,8 @@ class DmWebook
       do {
         $direct = $this->ig->direct->getInbox();
         $threads = array_merge($threads, $direct->getInbox()->getThreads());
-        $maxId = $direct->getNextMaxId();
+        //$this->logger->log("Unread count".$direct->getInbox()->getUnseenCount());
+        //$maxId = $direct->getNextMaxId();
       } while ($maxId !== null);
 
       /*
@@ -151,7 +158,8 @@ class DmWebook
             $msg = array(
               "message" => $threadItem->getText(),
               "userId" => $threadItem->getUserId(),
-              "timestamp" => $threadItem->getTimestamp()
+              "timestamp" => $threadItem->getTimestamp(),
+              "threadId" => $thread->getThreadId()
             );
             array_push($inbox, $msg);
           }
@@ -172,11 +180,11 @@ class DmWebook
     }
     return true;
   }
-  public function sendWebhookReply($config, $input) {
-    $reply = "Hello world";
-    
+  public function sendWebhookReply($config, $input,$response) {
+
     if(!$this->settings->debug)
-      $this->ig->direct->sendWebhookText($input["userId"], $reply);
+      $this->ig->direct->sendText(array("thread" => $input["threadId"]), $response["result"]);
+      //$this->logger->log("Sending reply: ".$response["result"]);
     else
       $this->logger->log("Test: Reply sent");
   }
