@@ -10,7 +10,7 @@ class DmWebook
   public function __construct () {
     $this->logger = new Logger();
 
-    $this->config = json_decode(file_get_contents('./config.json'));
+    $this->config = json_decode(file_get_contents(__DIR__.'/config.json'));
     $this->webhooks = $this->getAllConfig()->webhooks;
     $this->user = $this->getAllConfig()->user;
     $this->settings = $this->getAllConfig()->settings;
