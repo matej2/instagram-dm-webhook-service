@@ -133,10 +133,10 @@ class DmWebook
       $maxId = null;
       $threads = array();
       do {
-        $direct = $this->ig->direct->getInbox();
+        $direct = $this->ig->direct->getInbox($maxId);
         $threads = array_merge($threads, $direct->getInbox()->getThreads());
         //$this->logger->log("Unread count".$direct->getInbox()->getUnseenCount());
-        //$maxId = $direct->getNextMaxId();
+        $maxId = $direct->getInbox()->getOldestCursor();
       } while ($maxId !== null);
 
       /*
@@ -183,8 +183,8 @@ class DmWebook
   public function sendWebhookReply($config, $input,$response) {
 
     if(!$this->settings->debug)
-      $this->ig->direct->sendText(array("thread" => $input["threadId"]), $response["result"]);
-      //$this->logger->log("Sending reply: ".$response["result"]);
+      //$this->ig->direct->sendText(array("thread" => $input["threadId"]), $response["result"]);
+      $this->logger->log("Sending reply: ".$response["result"]);
     else
       $this->logger->log("Test: Reply sent");
   }
