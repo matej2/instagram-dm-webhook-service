@@ -112,6 +112,8 @@ class DmWebook
         $this->logger->log("Response from chat bot: ".$response["result"]);
 
         if($this->checkWebhookResponse($config, $response)) {
+
+          sleep($config->wait);
           $this->sendWebhookReply($config, $input,$response);
         }
       }

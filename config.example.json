@@ -16,7 +16,8 @@
       "blacklist": "offer,selected",
       "perMonthLimit": 1000,
       "perHourLimit": 20,
-      "path": "response.text"
+      "path": "response.text",
+      "wait": 1
     }
   ]
 }
