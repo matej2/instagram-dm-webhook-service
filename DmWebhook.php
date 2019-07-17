@@ -151,20 +151,21 @@ class DmWebook
 
       $inbox = array();
       $msg = array();
-  
+    
       foreach($threads as $thread) {
-        $threadItems = $thread->getItems();
-        foreach($threadItems as $threadItem) {
-          if ($threadItem->getText() !== null) {
-            // TODO: add profile id
-            $msg = array(
-              "message" => $threadItem->getText(),
-              "userId" => $threadItem->getUserId(),
-              "timestamp" => $threadItem->getTimestamp(),
-              "threadId" => $thread->getThreadId()
-            );
-            array_push($inbox, $msg);
-          }
+
+        $lastMsg = $thread->getLastPermanentItem();
+
+        $user = $this->getUser();
+        $this->logger->log($lastMsg->getUserId()." != ".$this->ig->people->getUserIdForName($user->username));
+        if($lastMsg->getUserId() != $this->ig->people->getUserIdForName($user->username)) {
+          $msg = array(
+            "message" => $lastMsg->getText(),
+            "userId" => $lastMsg->getUserId(),
+            "timestamp" => $lastMsg->getTimestamp(),
+            "threadId" => $thread->getThreadId()
+          );
+          array_push($inbox, $msg);
         }
       }
       return $inbox;
@@ -185,8 +186,8 @@ class DmWebook
   public function sendWebhookReply($config, $input,$response) {
 
     if(!$this->settings->debug)
-      //$this->ig->direct->sendText(array("thread" => $input["threadId"]), $response["result"]);
-      $this->logger->log("Sending reply: ".$response["result"]);
+      $this->ig->direct->sendText(array("thread" => $input["threadId"]), $response["result"]);
+      //$this->logger->log("Sending reply: ".$response["result"]);
     else
       $this->logger->log("Test: Reply sent");
   }
