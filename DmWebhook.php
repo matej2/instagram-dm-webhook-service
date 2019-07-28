@@ -23,7 +23,9 @@ class DmWebook
     $this->currConfInd = 0;
 
     // accept all pending messages  
-    //$this->ig->direct->approvePendingThreads();
+    $pendingInbox = $this->ig->direct->getPendingInbox()->getInbox()->getThreads();
+    if(sizeof($pendingInbox) > 0)
+      $this->ig->direct->approvePendingThreads($pendingInbox);
   }
   
   public function sendWebhook($message, $callback = null) {
