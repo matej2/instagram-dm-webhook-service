@@ -11,17 +11,23 @@ class DmWebook
     $this->logger = new Logger();
 
     $this->config = json_decode(file_get_contents(__DIR__.'/config.json'));
-    $this->webhooks = $this->getAllConfig()->webhooks;
-    $this->user = $this->getAllConfig()->user;
-    $this->settings = $this->getAllConfig()->settings;
+    $this->webhooks = $this->getConfig()->webhooks;
+    $this->user = $this->getConfig()->user;
+    $this->settings = $this->getConfig()->settings;
 
     if($this->settings->debug == false) {
       $this->ig = new \InstagramAPI\Instagram();
       $this->ig->login($this->user->username, $this->user->pass);
     }
+
+    $this->currConfInd = 0;
+
+    // accept all pending messages  
+    //$this->ig->direct->approvePendingThreads();
   }
   
-  public function sendWebhook($config, $message, $callback = null) {
+  public function sendWebhook($message, $callback = null) {
+    $config = $this->getCurrWebhook();
     $url = $config->url;
 
 
@@ -50,21 +56,16 @@ class DmWebook
     );
   }
 
-  public function getSingleConfig($index) {
-    if(isset($index) && gettype($index) == "integer" && $index > -1 && isset($this->config[$index])) {
-      return $this->config[$index];
-    }
-    else {
-      return false;
-    }
-  }
-
-  public function getAllConfig() {
+  public function getConfig() {
     return $this->config;
   }
 
   public function getWebhooks() {
     return $this->webhooks;
+  }
+
+  public function getCurrWebhook() {
+    return $this->webhooks[$this->currConfInd] ? $this->webhooks[$this->currConfInd] : false;
   }
 
   public function getUser() {
@@ -75,21 +76,20 @@ class DmWebook
     return $this->settings;
   }
 
-
-
-  public function isBlacklisted($config, $input) {
+  public function isBlacklisted($input) {
     $isBlacklisted = false;
     foreach($input as $word) {
-      $isBlacklisted &= strpos($config->blacklist, $input);
+      $isBlacklisted &= strpos($this->getCurrWebhook()->blacklist, $input);
     }
     return $isBlacklisted;
   }
 
-  public function isHourlLimitExceded($config) {
+  public function isHourlLimitExceded() {
     return false;
   }
 
-  public function processMessage($config, $input) {
+  public function processMessage($input) {
+    $config = $this->getCurrWebhook();
     if(!isset($config->keywords)) {
       $this->logger->log("Keywords missing. Check config");
       return false;
@@ -120,9 +120,8 @@ class DmWebook
     }
   }
 
-  public function waitlistMessage($config,$message) {
-    //$this->log("Waitlisting message: ".$input["message"]);
-    $response = $this->sendWebhook($config, $message);
+  public function waitlistMessage($message) {
+    $response = $this->sendWebhook($this->getCurrWebhook(), $message);
     if($response)
     return true;
   }
@@ -137,7 +136,6 @@ class DmWebook
       do {
         $direct = $this->ig->direct->getInbox($maxId);
         $threads = array_merge($threads, $direct->getInbox()->getThreads());
-        //$this->logger->log("Unread count".$direct->getInbox()->getUnseenCount());
         $maxId = $direct->getInbox()->getOldestCursor();
       } while ($maxId !== null);
 
@@ -161,7 +159,6 @@ class DmWebook
         if($lastMsg->getUserId() != $this->ig->people->getUserIdForName($user->username)) {
           $msg = array(
             "message" => $lastMsg->getText(),
-            "userId" => $lastMsg->getUserId(),
             "timestamp" => $lastMsg->getTimestamp(),
             "threadId" => $thread->getThreadId()
           );
@@ -172,7 +169,10 @@ class DmWebook
     }
 
   }
-  public function checkWebhookResponse($config, $response) {
+  public function checkWebhookResponse($response) {
+    $config = $this->getCurrWebhook();
+
+    $this->getCurrWebhook();
     if(!strpos($response["http_response_header"][0],strval($config->returnStatus))) {
       $this->logger->log( "Reponse status does not match target status from config. Expected ".$config->returnStatus." but got ".$response["http_response_header"][0]);
       return false;
@@ -183,7 +183,7 @@ class DmWebook
     }
     return true;
   }
-  public function sendWebhookReply($config, $input,$response) {
+  public function sendWebhookReply($input,$response) {
 
     if(!$this->settings->debug)
       $this->ig->direct->sendText(array("thread" => $input["threadId"]), $response["result"]);
@@ -216,5 +216,10 @@ class DmWebook
           $ref = $value;  // set the value
       }
       return $prev;
+  }
+
+  public function hasNextConf() {
+    $this->currConfInd++;
+    return ($this->currConfInd < sizeof($this->getWebhooks())) ? true : false;
   }
 }
