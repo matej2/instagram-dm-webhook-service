@@ -1,5 +1,23 @@
 {
-  "url": "",
-  "method": "POST",
-  "returnStatus": 200
+  "settings": {
+    "debug": true
+  },
+  "user": {
+    "username": "username",
+    "pass": "pass"
+    },
+  "webhooks":
+  [
+    {
+      "url": "",
+      "method": "POST",
+      "returnStatus": 200,
+      "keywords": "hello,hi",
+      "blacklist": "offer,selected",
+      "perMonthLimit": 1000,
+      "perHourLimit": 20,
+      "path": "response.text",
+      "wait": 1
+    }
+  ]
 }

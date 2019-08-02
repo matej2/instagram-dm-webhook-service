@@ -1,1 +1,4 @@
 config.json
+logs
+vendor
+composer.lock
