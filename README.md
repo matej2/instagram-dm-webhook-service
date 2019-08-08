@@ -5,11 +5,11 @@
 
 This is Instagram direct message webhook service. It will read messages from Instagram and send webhooks to chatbot services. It will then reply to message in Instagram dm. Due to Instagram limitations, we can support only text-based communication between IG DM and third-party service.
 
-This service will not use official api as it is not possible to collect messages data and to reply to incoming messages. Instead it will use unofficial api / library
+This service is not using official api as it is not possible to collect messages data and to reply to incoming messages. Instead it uses unofficial api / library
 
 
 ## Contributing
-You can pick any issue marked as a *enchantment* or just start your own feature. You can submit your commits on `beta` branch. For larger changes (features) we suggest you make separate branch and then make PR to `beta` branch. If you would like, you can also get access to trello board where we have cards with details.
+You can pick any [issue marked as a *enchantment*](https://github.com/matej2/instagram-dm-webhook-service/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) or just start your own feature. Also any discussion on these features is welcomed as it helps us understand topic. You can submit your commits on `beta` branch. For larger changes (features) we suggest you make separate branch and then make PR to `beta` branch. If you would like, you can also get access to trello board where we have cards with details.
 
 
 ## Setup
@@ -50,7 +50,8 @@ Before calling webhook, service will count already sent webhooks to check (if de
 Furthermore, if limit quotas have been reached, the messgae is sent to wating list in database. Message will be send when quotas are reset.
 
 - [x] Request pause
-User will be able to setup time pauses between webhook calls. This is essential as some chatbot services have webhook call time limits
+
+User will be able to setup time delay between webhook calls. This is essential as some chatbot services have webhook call limits per second
 
 - [x] Keywords
 
