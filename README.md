@@ -1,15 +1,15 @@
 # instagram-dm-webhook-service
 
-> This will not be autorespond / autosend service. Similar to Facebook chat bot service, this service will use webhooks to communicate with external services to get response based on received message.
+> This is not be autorespond / autosend service. Similar to Facebook chat bot service, this service uses webhooks to communicate with external services to get response based on received message.
 
 
 This is Instagram direct message webhook service. It will read messages from Instagram and send webhooks to chatbot services. It will then reply to message in Instagram dm. Due to Instagram limitations, we can support only text-based communication between IG DM and third-party service.
 
-This service will not use official api as it is not possible to collect messages data and to reply to incoming messages. Instead it will use unofficial api / library
+This service is not using official api as it is not possible to collect messages data and to reply to incoming messages. Instead it uses unofficial api / library
 
 
 ## Contributing
-You can submit your commits on `beta` branch. For larger changes (features) we suggest you make separate branch and then make PR to `beta` branch.
+You can pick any [issue marked as a *enchantment*](https://github.com/matej2/instagram-dm-webhook-service/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) or just start your own feature. Also any discussion on these features is welcomed as it helps us understand topic. You can submit your commits on `beta` branch. For larger changes (features) we suggest you make separate branch and then make PR to `beta` branch. If you would like, you can also get access to trello board where we have cards with details.
 
 
 ## Setup
@@ -21,7 +21,7 @@ For instagram api to work, you need to [enable php extensions](https://github.co
 
 1. Clone to local directory
 2. Copy and rename `config.example.json` to `config.json`
-3. Fill in your configuration (you can use this for testing: https://webhook.site)
+3. Fill in your configuration (you can use this for testing: https://webhook.site -  if you are using this, you should also set reply in JSON)
 4. `php -f main.php`
 
 ### Configuration setup
@@ -41,7 +41,7 @@ User should configure this service to run every 15 minutes. It will check latest
 
 ## Planned features
 
-- [ ] Per month / per hour limit checks
+- [ ] Per hour limit checks
 
 Before calling webhook, service will count already sent webhooks to check (if defined) hourly and monthly quota limits. 
 
@@ -49,9 +49,13 @@ Before calling webhook, service will count already sent webhooks to check (if de
 
 Furthermore, if limit quotas have been reached, the messgae is sent to wating list in database. Message will be send when quotas are reset.
 
-- [ ] Keyword blacklist
+- [x] Request pause
 
-To prevent replying to auto-send bots, service will use keyword checks. If word is blacklisted, service will not send webhooks but it will log event.
+User will be able to setup time delay between webhook calls. This is essential as some chatbot services have webhook call limits per second
+
+- [x] Keywords
+
+Service only calls webhook if the message includes specific keyword(s).
 
 - [x] After send method
 
