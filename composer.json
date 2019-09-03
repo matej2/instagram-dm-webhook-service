@@ -1,5 +1,23 @@
 {
-    "require": {
-        "mgp25/instagram-php": "6.0.1"
+  "name":"instagram-dm-webhook-service",
+  "description":"Instagram direct message webhook service for chat bots",
+  "license": "MIT",
+  "version": "1.0",
+  "keywords": ["php", "instagram", "instagram-dm", "chat-bot", "webhook", "bot-service", "instagram-chat-bot", "communication", "webhooks", "chatbot-services", "chat-bots", "keywords", "calls-webhook"],
+  "authors": [
+    {
+        "name": "Matej Jurko",
+        "email": "info@webspot.si",
+        "homepage": "http://webspot.si/",
+        "role": "Developer"
     }
+  ],
+  "support": {
+    "issues": "https://github.com/matej2/instagram-dm-webhook-service/issues",
+    "docs": "https://github.com/matej2/instagram-dm-webhook-service/blob/master/README.md"
+  },
+  "minimum-stability": "stable",
+  "require": {
+      "mgp25/instagram-php": "6.0.1"
+  }
 }
