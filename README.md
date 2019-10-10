@@ -41,14 +41,6 @@ User should configure this service to run every 15 minutes. It will check latest
 
 ## Planned features
 
-- [ ] Per hour limit checks
-
-Before calling webhook, service will count already sent webhooks to check (if defined) hourly and monthly quota limits. 
-
-- [ ] Wait list
-
-Furthermore, if limit quotas have been reached, the messgae is sent to wating list in database. Message will be send when quotas are reset.
-
 - [x] Request pause
 
 User will be able to setup time delay between webhook calls. This is essential as some chatbot services have webhook call limits per second
