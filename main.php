@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__."/DmWebhook.php";
+require_once __DIR__."/src/DmWebhook.php";
 
 $obj = new DmWebook();
 
