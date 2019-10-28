@@ -1,7 +1,9 @@
 FROM php:7.3-fpm
 
 
-RUN apt-get update && apt-get install -y \
+RUN sed -i "s/jessie main/jessie main contrib non-free/" /etc/apt/sources.list \
+    && echo "deb http://http.debian.net/debian jessie main contrib non-free" >> /etc/apt/sources.list \
+    && apt-get update && apt-get install -y \
     gcc \
     musl-dev \
     autoconf \
@@ -14,14 +16,12 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     cron \
     vim \
+    ffmpeg \
     && docker-php-ext-install -j$(nproc) pdo pdo_mysql bcmath zip pcntl gd mbstring exif
 
 
 
-# Install ffmpeg
-RUN sed -i "s/jessie main/jessie main contrib non-free/" /etc/apt/sources.list \
-&& echo "deb http://http.debian.net/debian jessie main contrib non-free" >> /etc/apt/sources.list \
-&& apt-get update && apt-get install -y ffmpeg
+
 
 
 RUN echo 'export EDITOR=vim' >> /root/.bashrc
@@ -41,20 +41,14 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php && php -r "unlink('composer-setup.php');" \
     && mv composer.phar /usr/local/bin/composer
 
-RUN cd /var/www/html/
-
-
-RUN usermod -u 1000 www-data && \
-    groupmod -g 1000 www-data && \
-    chown -R www-data:www-data /var/www/
 
 
 
 RUN mkdir -p /var/log/php/ \
     && touch /var/log/php/access.log \
     && touch /var/log/php/error.log \
-    && chmod 777 /var/log/php/access.log \
-    && chmod 777 /var/log/php/error.log
+    && chmod 660 /var/log/php/access.log \
+    && chmod 660 /var/log/php/error.log
 
 
 

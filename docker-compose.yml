@@ -7,8 +7,6 @@ services:
       context: ./docker/php
       dockerfile: Dockerfile
     restart: always
-    expose:
-      - "9000"
     volumes:
       - ./:/var/www/html/
       - ./docker/php/crontab:/etc/cron.d/myCrontab
