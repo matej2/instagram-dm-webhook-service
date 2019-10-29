@@ -3,3 +3,4 @@ logs
 vendor
 composer.lock
 mycron
+.idea/
