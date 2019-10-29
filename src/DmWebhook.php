@@ -1,10 +1,11 @@
 <?php
 
 use Dotenv\Dotenv;
+use InstagramAPI\Instagram;
 
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/DmWebhookMockData.php';
-require __DIR__ . '/Logger.php';
+require ROOT . '/vendor/autoload.php';
+require ROOT . '/src/DmWebhookMockData.php';
+require ROOT . '/src/Logger.php';
 
 class DmWebook
 {
@@ -14,12 +15,8 @@ class DmWebook
     {
 
         $this->logger = new Logger();
-        $dotenv = new Dotenv\Dotenv(ROOT);
-        $dotenv->load();
+        (new Dotenv(ROOT))->load();
 
-        $this->logger = new Logger();
-
-        $this->config = json_decode(file_get_contents(ROOT . '/config.json'));
         $this->webhooks = [
             "url"           => getenv("WEBHOOK_URL"),
             "method"        => getenv("WEBHOOK_METHOD"),
@@ -31,13 +28,13 @@ class DmWebook
             "path"          => getenv("WEBHOOK_PATH"),
             "wait"          => getenv("WEBHOOK_WAIT")
         ];
+        $this->debug    = getenv("DEBUG");
+        $this->username = getenv("USERNAME");
+        $this->password = getenv("PASSWORD");
 
-        $this->user     = getenv("USERNAME");
-        $this->settings = getenv("PASSWORD");
-
-        if ($this->settings->debug == false) {
-            $this->ig = new \InstagramAPI\Instagram();
-            $this->ig->login($this->user->username, $this->user->pass);
+        if ($this->debug == false) {
+            $this->ig = new Instagram();
+            $this->ig->login($this->username, $this->password);
         }
 
         $this->currConfInd = 0;
@@ -79,10 +76,6 @@ class DmWebook
         );
     }
 
-    public function getConfig()
-    {
-        return $this->config;
-    }
 
     public function getWebhooks()
     {
@@ -96,13 +89,9 @@ class DmWebook
 
     public function getUser()
     {
-        return $this->user;
+        return $this->username;
     }
 
-    public function getSettings()
-    {
-        return $this->settings;
-    }
 
     public function isBlacklisted($input)
     {
@@ -160,7 +149,7 @@ class DmWebook
 
     public function getLastDM()
     {
-        if ($this->getSettings()->debug == true) {
+        if ($this->debug == true) {
             return getMockMessages();
         } else {
 
@@ -222,7 +211,7 @@ class DmWebook
     public function sendWebhookReply($input, $response)
     {
 
-        if (!$this->settings->debug)
+        if (!$this->debug)
             $this->ig->direct->sendText(array("thread" => $input["threadId"]), $response["result"]);
         //$this->logger->log("Sending reply: ".$response["result"]);
         else

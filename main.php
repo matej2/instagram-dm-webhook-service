@@ -2,11 +2,9 @@
 
 define('ROOT',__DIR__);
 
-require_once __DIR__."/src/DmWebhook.php";
+require_once ROOT . "/src/DmWebhook.php";
 
-$obj = new DmWebook();
-
-
+$obj      = new DmWebook();
 $messages = $obj->getLastDM();
 
 do {
