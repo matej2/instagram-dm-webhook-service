@@ -127,11 +127,11 @@ class DmWebook
             if (isset($input["message"]) && preg_match($regex, $input["message"]) !== false && preg_match($regex, $input["message"]) !== 0) {
                 $this->logger->log("Found match for " . $input["message"] . ", waitlisting...");
                 //return $this->waitlistMessage($config,$input);
-                $response = $this->sendWebhook($config, $input);
+                $response = $this->sendWebhook($input);
 
-                $this->logger->log("Response from chat bot: " . $response["result"]);
+                $this->logger->log("Response from chat bot: " . strval($response["result"]));
 
-                if ($this->checkWebhookResponse($config, $response)) {
+                if ($this->checkWebhookResponse($response)) {
 
                     sleep($config["wait"]);
                     $this->sendWebhookReply($config, $input, $response);
@@ -142,14 +142,14 @@ class DmWebook
 
     public function waitlistMessage($message)
     {
-        $response = $this->sendWebhook($this->getCurrWebhook(), $message);
+        $response = $this->sendWebhook($message);
         if ($response)
             return true;
     }
 
     public function getLastDM()
     {
-        if ($this->debug == true) {
+        if ($this->debug == "true") {
             return getMockMessages();
         } else {
 
@@ -177,8 +177,8 @@ class DmWebook
                 $lastMsg = $thread->getLastPermanentItem();
 
                 $user = $this->getUser();
-                $this->logger->log($lastMsg->getUserId() . " != " . $this->ig->people->getUserIdForName($user->username));
-                if ($lastMsg->getUserId() != $this->ig->people->getUserIdForName($user->username)) {
+                $this->logger->log($lastMsg->getUserId() . " != " . $this->ig->people->getUserIdForName($user));
+                if ($lastMsg->getUserId() != $this->ig->people->getUserIdForName($user)) {
                     $msg = array(
                         "message" => $lastMsg->getText(),
                         "timestamp" => $lastMsg->getTimestamp(),
