@@ -10,6 +10,12 @@
         "email": "info@webspot.si",
         "homepage": "http://webspot.si/",
         "role": "Developer"
+    },
+    {
+      "name": "Nima Amiri",
+      "email": "nimaamiri92@gmail.com",
+      "homepage": "https://github.com/arc92",
+      "role": "Developer"
     }
   ],
   "support": {
@@ -18,6 +24,7 @@
   },
   "minimum-stability": "stable",
   "require": {
-      "mgp25/instagram-php": "6.0.1"
+      "mgp25/instagram-php": "6.0.1",
+      "vlucas/phpdotenv": "^2.3"
   }
 }
