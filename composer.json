@@ -1,5 +1,5 @@
 {
-  "name":"instagram-dm-webhook-service",
+  "name":"matej2/instagram-dm-webhook-service",
   "description":"Instagram direct message webhook service for chat bots",
   "license": "MIT",
   "version": "1.0",

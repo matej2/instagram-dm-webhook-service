@@ -15,7 +15,7 @@ class DmWebook
     {
 
         $this->logger = new Logger();
-        (new Dotenv(ROOT))->load();
+        (new Dotenv(ROOT))->overload();
 
         $this->webhooks = [
             "url"           => getenv("WEBHOOK_URL"),
@@ -32,7 +32,7 @@ class DmWebook
         $this->username = getenv("USERNAME");
         $this->password = getenv("PASSWORD");
 
-        if ($this->debug == false) {
+        if ($this->debug == "false") {
             $this->ig = new Instagram();
             $this->ig->login($this->username, $this->password);
         }
