@@ -150,6 +150,7 @@ class DmWebook
     public function getLastDM()
     {
         if ($this->debug == "true") {
+            $this->logger->log("Debugger mode");
             return getMockMessages();
         } else {
 
@@ -211,7 +212,7 @@ class DmWebook
     public function sendWebhookReply($input, $response)
     {
 
-        if (!$this->debug)
+        if ($this->debug == "false")
             $this->ig->direct->sendText(array("thread" => $input["threadId"]), $response["result"]);
         //$this->logger->log("Sending reply: ".$response["result"]);
         else
