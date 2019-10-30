@@ -158,6 +158,10 @@ class DmWebook
             $threads = array();
             do {
                 $direct = $this->ig->direct->getInbox($maxId);
+                if($direct->getInbox() == null) {
+                  $this->logger->log("\$direct->getInbox() is null, class is ".get_class($direct));
+                  break;
+                }
                 $threads = array_merge($threads, $direct->getInbox()->getThreads());
                 $maxId = $direct->getInbox()->getOldestCursor();
             } while ($maxId !== null);

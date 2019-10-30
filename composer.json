@@ -24,7 +24,7 @@
   },
   "minimum-stability": "stable",
   "require": {
-      "mgp25/instagram-php": "6.0.1",
+      "mgp25/instagram-php": "7.0.1",
       "vlucas/phpdotenv": "^2.3"
   }
 }
