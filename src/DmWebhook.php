@@ -17,7 +17,7 @@ class DmWebook
         $this->logger = new Logger();
         (new Dotenv(ROOT))->overload();
 
-        $this->webhooks = [
+        $this->webhooks = [[
             "url"           => getenv("WEBHOOK_URL"),
             "method"        => getenv("WEBHOOK_METHOD"),
             "returnStatus"  => getenv("WEBHOOK_RETURN_STATUS"),
@@ -27,7 +27,7 @@ class DmWebook
             "perHourLimit"  => getenv("WEBHOOK_PER_HOUR_LIMIT"),
             "path"          => getenv("WEBHOOK_PATH"),
             "wait"          => getenv("WEBHOOK_WAIT")
-        ];
+        ]];
         $this->debug    = getenv("DEBUG");
         $this->username = getenv("USERNAME");
         $this->password = getenv("PASSWORD");
@@ -48,21 +48,21 @@ class DmWebook
     public function sendWebhook($message, $callback = null)
     {
         $config = $this->getCurrWebhook();
-        $url = $config->url;
+        $url = $config["url"];
 
 
         // use key 'http' even if you send the request to https://...
         $options = array(
             'http' => array(
                 'header' => "Content-type: application/json",
-                'method' => $config->method,
+                'method' => $config["method"],
                 'content' => json_encode($message)
             )
         );
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
 
-        $path = explode(".", $config->path);
+        $path = explode(".", $config["path"]);
         $whResponse = json_decode($result, true);
 
         $val = $this->arrayPath($whResponse, $path);
@@ -110,13 +110,13 @@ class DmWebook
     public function processMessage($input)
     {
         $config = $this->getCurrWebhook();
-        if (!isset($config->keywords)) {
+        if (!isset($config["keywords"])) {
             $this->logger->log("Keywords missing. Check config");
             return false;
         }
 
         $this->logger->log("Reading keywords");
-        $words = explode(",", $config->keywords);
+        $words = explode(",", $config["keywords"]);
 
         foreach ($words as $word) {
             $word = trim($word);
@@ -133,7 +133,7 @@ class DmWebook
 
                 if ($this->checkWebhookResponse($config, $response)) {
 
-                    sleep($config->wait);
+                    sleep($config["wait"]);
                     $this->sendWebhookReply($config, $input, $response);
                 }
             }
@@ -197,12 +197,12 @@ class DmWebook
         $config = $this->getCurrWebhook();
 
         $this->getCurrWebhook();
-        if (!strpos($response["http_response_header"][0], strval($config->returnStatus))) {
-            $this->logger->log("Reponse status does not match target status from config. Expected " . $config->returnStatus . " but got " . $response["http_response_header"][0]);
+        if (!strpos($response["http_response_header"][0], strval($config["returnStatus"]))) {
+            $this->logger->log("Reponse status does not match target status from config. Expected " . $config["returnStatus"] . " but got " . $response["http_response_header"][0]);
             return false;
         }
         if (!$response["result"]) {
-            $this->logger->log("Error: Webhook response is null. Path: " . $config->path);
+            $this->logger->log("Error: Webhook response is null. Path: " . $config["path"]);
             return false;
         }
         return true;
