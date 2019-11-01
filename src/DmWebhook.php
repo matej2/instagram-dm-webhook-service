@@ -134,7 +134,7 @@ class DmWebook
                 if ($this->checkWebhookResponse($response)) {
 
                     sleep($config["wait"]);
-                    $this->sendWebhookReply($config, $input, $response);
+                    $this->sendWebhookReply($input, $response);
                 }
             }
         }
