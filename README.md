@@ -3,13 +3,13 @@
 > This is not be autorespond / autosend service. Similar to Facebook chat bot service, this service uses webhooks to communicate with external services to get response based on received message.
 
 
-This is Instagram direct message webhook service. It will read messages from Instagram and send webhooks to chatbot services. It will then reply to message in Instagram dm. Due to Instagram limitations, we can support only text-based communication between IG DM and third-party service.
+This is Instagram direct message webhook service. It reads messages from Instagram and send webhooks to chatbot services. It then replies to message in Instagram dm inbox. Due to Instagram limitations, we can support only text-based communication between IG DM and third-party service.
 
 This service is not using official api as it is not possible to collect messages data and to reply to incoming messages. Instead it uses unofficial api / library
 
 
 ## Contributing
-You can pick any [issue marked as a *enchantment*](https://github.com/matej2/instagram-dm-webhook-service/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) or just start your own feature. Also any discussion on these features is welcomed as it helps us understand topic. You can submit your commits on `beta` branch. For larger changes (features) we suggest you make separate branch and then make PR to `beta` branch. If you would like, you can also get access to trello board where we have cards with details.
+You can pick any [issue](https://github.com/matej2/instagram-dm-webhook-service/issuest) or just start your own feature. Before that make sure to create an issue with *feature request* template. Also any discussion on these features is welcomed as it helps us understand topic. You can submit your commits on `beta` branch.
 
 
 ## Setup
@@ -30,7 +30,7 @@ Apart from standard webhook config, user needs to setup keywords, which will tri
 
 ### Setting up cone job
 
-There is no official limt on how message to send to users in a specific period of time. While it can be problematic to send messages as a request, it is less problematic to send responses (when you are not the first one initiating conversation). The advice is to setup crone job to run service each 15 minutes (file is located at `/var/spool/cron/crontabs/`):
+There is no official limt on how message to send to users in a specific period of time. While it can be problematic to send messages as a request, it is not problematic to send responses (when you are not the first one initiating conversation). The advice is to setup crone job to run service each 15 minutes (file is located at `/var/spool/cron/crontabs/`):
 
 ```
 * 0/15 * ? * * * php -f /path-to-dm-bot/main.php
@@ -41,7 +41,7 @@ User should configure this service to run every 15 minutes. It will check latest
 
 ## Planned features
 
-- [x] Request pause
+- [x] Request delay
 
 User will be able to setup time delay between webhook calls. This is essential as some chatbot services have webhook call limits per second
 
