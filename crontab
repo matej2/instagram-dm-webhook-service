@@ -1,0 +1,2 @@
+*/15 * * * * /usr/bin/php -f /instagram-dm-webhook/main.php > logs.txt
+# Don't remove the empty line at the end of this file. It is required to run the cron job
