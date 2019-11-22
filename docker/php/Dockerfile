@@ -1,56 +1,50 @@
-FROM php:7.3-fpm
+    
+# The php:7.0-apache Docker image is based on debian:jessie.
+# See: https://github.com/docker-library/php/blob/20b89e64d16dc9310ba6493a38385e36304dded7/7.0/Dockerfile
 
+FROM php:7.1
 
-RUN sed -i "s/jessie main/jessie main contrib non-free/" /etc/apt/sources.list \
-    && echo "deb http://http.debian.net/debian jessie main contrib non-free" >> /etc/apt/sources.list \
-    && apt-get update && apt-get install -y \
-    gcc \
-    musl-dev \
-    autoconf \
-    zlib1g-dev \
-    zip \
-    unzip \
-    wget \
-    libpng-dev \
-    libxml2-dev \
-    libzip-dev \
-    cron \
-    vim \
-    ffmpeg \
-    && docker-php-ext-install -j$(nproc) pdo pdo_mysql bcmath zip pcntl gd mbstring exif
+RUN echo "deb http://deb.debian.org/debian jessie main" > /etc/apt/sources.list \
+    && echo "deb http://security.debian.org jessie/updates main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y  --allow-remove-essential --allow-downgrades \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+        git \
+        libav-tools \
+        unzip \ 
+        wget \
+        xz-utils \
+        cron \
+        ibsdl1.2debian \
+        libcaca0 \
+        zlib1g=1:1.2.8.dfsg-2+b1 \
+        zlib1g-dev \
+        libslang2 \
+        libtinfo5 \
+    && docker-php-ext-install -j$(nproc) iconv mcrypt \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc) bcmath \
+    && docker-php-ext-install -j$(nproc) exif
 
+COPY . /instagram-dm-webhook
 
+RUN wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz \
+      && tar Jxvf ./ffmpeg-release-amd64-static.tar.xz \
+      && cp ./ffmpeg*amd64-static/ffmpeg /usr/local/bin/
 
+# Install Composer and make it available in the PATH
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
+# Set the WORKDIR to /app so all following commands run in /app
+WORKDIR /instagram-dm-webhook
 
+COPY docker/php/crontab /etc/cron.d/dm-webhook-cron
+RUN chmod 0644 /etc/cron.d/dm-webhook-cron
+RUN crontab /etc/cron.d/dm-webhook-cron
 
-RUN echo 'export EDITOR=vim' >> /root/.bashrc
-
-
-# Add crontab file in the cron directory
-ADD crontab /etc/cron.d/myCrontab
-
-# Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/myCrontab
-
-# Create the log file to be able to run tail
-RUN touch /var/log/cron.log
-
-# Installing composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php && php -r "unlink('composer-setup.php');" \
-    && mv composer.phar /usr/local/bin/composer
-
-
-
-
-RUN mkdir -p /var/log/php/ \
-    && touch /var/log/php/access.log \
-    && touch /var/log/php/error.log \
-    && chmod 660 /var/log/php/access.log \
-    && chmod 660 /var/log/php/error.log
-
-
-
-# Run the command on container startup
-CMD cron && tail -f /var/log/cron.log
+# Install dependencies with Composer.
+RUN composer install --prefer-source --no-interaction && cron 
