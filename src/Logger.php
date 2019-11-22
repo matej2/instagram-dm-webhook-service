@@ -12,16 +12,16 @@ class Logger {
     
     echo $log;
 
-    if(!file_exists("./logs")) {
-      mkdir("./logs");
-      chmod("./logs", 0750);
+    if(!file_exists(ROOT."/logs")) {
+      mkdir(ROOT."/logs");
+      chmod(ROOT."/logs", 0750);
     }
 
     file_put_contents($this->getFileName(), $log, FILE_APPEND);
   }
 
   public function getFileName() {
-    return __DIR__.'/logs/'.date("j-n-Y").'.log';
+    return ROOT.'/logs/'.date("j-n-Y").'.log';
   }
 
   public function getTimestamp() {
