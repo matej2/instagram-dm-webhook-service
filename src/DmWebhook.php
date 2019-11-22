@@ -35,14 +35,16 @@ class DmWebook
         if ($this->debug == "false") {
             $this->ig = new Instagram();
             $this->ig->login($this->username, $this->password);
+        } else {
+        	$this->logger->log("Using debug mode, ig property will not be initialised");
         }
 
         $this->currConfInd = 0;
 
         // accept all pending messages
-        $pendingInbox = $this->ig->direct->getPendingInbox()->getInbox()->getThreads();
-        if (sizeof($pendingInbox) > 0)
-            $this->ig->direct->approvePendingThreads($pendingInbox);
+        // $pendingInbox = $this->ig->direct->getPendingInbox()->getInbox()->getThreads();
+        //if (sizeof($pendingInbox) > 0)
+        //    $this->ig->direct->approvePendingThreads($pendingInbox);
     }
 
     public function sendWebhook($message, $callback = null)
@@ -156,14 +158,17 @@ class DmWebook
 
             $maxId = null;
             $threads = array();
-            do {
-                $direct = $this->ig->direct->getInbox($maxId);
-                if($direct->getInbox() == null) {
-                  $this->logger->log("\$direct->getInbox() is null, class is ".get_class($direct));
+	    do {
+                if(isset($this->ig) && isset($this->ig->direct) && $this->ig->direct->getInbox($maxId) && $this->ig->direct->getInbox($maxId)->getInbox()) {
+					$direct = $this->ig->direct->getInbox($maxId);
+                	$threads = array_merge($threads, $direct->getInbox()->getThreads());
+                	$maxId = $direct->getInbox()->getOldestCursor();
+                } else {
+                $this->logger->log("getInbox is null. Check credentials");
+                $this->logger->log($this->ig);
                   break;
                 }
-                $threads = array_merge($threads, $direct->getInbox()->getThreads());
-                $maxId = $direct->getInbox()->getOldestCursor();
+
             } while ($maxId !== null);
 
             /*
