@@ -1,2 +1,2 @@
-* 0/15 * ? * * * root php -f /var/www/html/main.php >> /var/log/cron.log 2>&1
+*/15 * * * * /usr/bin/php -f /instagram-dm-webhook/main.php > logs.txt
 # Don't remove the empty line at the end of this file. It is required to run the cron job
