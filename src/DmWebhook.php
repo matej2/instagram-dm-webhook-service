@@ -34,13 +34,16 @@ class DmWebook
 
         if ($this->debug == "false") {
             $this->ig = new Instagram();
-            $this->ig->login($this->username, $this->password);
+            $isLoggedIn = $this->ig->login($this->username, $this->password);
+            if(!$isLoggedIn) {
+            	$this->logger->log("Wrong email or password.");
+            }
         }
 
         $this->currConfInd = 0;
 
         // accept all pending messages
-        if($this->ig && $this->ig->direct && $this->ig->direct->getPendingInbox() && $this->ig->direct->getPendingInbox()->getInbox() && $this->ig->direct->getPendingInbox()->getInbox()->getThreads()) {
+        if(isset($this->ig) && isset($this->ig->direct) && $this->ig->direct->getPendingInbox() && $this->ig->direct->getPendingInbox()->getInbox() && $this->ig->direct->getPendingInbox()->getInbox()->getThreads()) {
           $pendingInbox = $this->ig->direct->getPendingInbox()->getInbox()->getThreads();
           if (sizeof($pendingInbox) > 0)
             $this->ig->direct->approvePendingThreads($pendingInbox);
@@ -159,14 +162,14 @@ class DmWebook
             $maxId = null;
             $threads = array();
             do {
-              if($this->ig && $this->ig->direct && $this->ig->direct->getInbox($maxId)) {
+              if(isset($this->ig) && isset($this->ig->direct) && $this->ig->direct->getInbox($maxId)) {
                 $direct = $this->ig->direct->getInbox($maxId);
 
                 $threads = array_merge($threads, $direct->getInbox()->getThreads());
                 $maxId = $direct->getInbox()->getOldestCursor();
 
               } else {
-                $this->logger->log("\$direct->getInbox() is null, class is ".get_class($direct));
+                $this->logger->log("\$direct->getInbox() is null, exiting");
                 break;
               }
             } while ($maxId !== null);
