@@ -1,4 +1,4 @@
-## This project is depreciated as the dependency's source code project (mgp25/instagram-php) has been deleted.
+## This project is depreciated as the dependency's source code (mgp25/instagram-php) has been deleted.
 
 # instagram-dm-webhook-service
 
