@@ -1,3 +1,5 @@
+## This project is depreciated as the dependency's source code project (mgp25/instagram-php) has been deleted.
+
 # instagram-dm-webhook-service
 
 > This is not be autorespond / autosend service. Similar to Facebook chat bot service, this service uses webhooks to communicate with external services to get response based on received message.
